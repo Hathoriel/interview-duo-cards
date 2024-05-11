@@ -1,36 +1,10 @@
-import { stringUtils } from './string.utils'
+import React from 'react';
+import { tsxUtils } from './txs.utils'
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
-const prefixes = ['the', 'a', 'to'];
-
-describe('StringUtils', () => {
-
-  describe('removePrefix', () => {
-    it.each([
-      ['  Hello', prefixes, 'Hello'],
-      ['Hello', prefixes, 'Hello'],
-      ['Hello World', prefixes, 'Hello World'],
-      ['the Hello', prefixes, 'Hello'],
-      ['a Hello World', prefixes, 'Hello World'],
-      ['to Hello World', prefixes, 'Hello World'],
-      ['the World 123', prefixes, 'World 123'],
-      ['a World 123 456', prefixes, 'World 123 456'],
-      ['to World 123', prefixes, 'World 123'],
-      ['The World', prefixes, 'World'],
-      ['A World', prefixes, 'World'],
-      ['To World', prefixes, 'World'],
-      ['not the', prefixes, 'not the'],
-      ['something else', prefixes, 'something else'],
-      ['remove this', ['remove', 'this'], 'this'],
-      ['ignore this', ['only', 'these'], 'ignore this'],
-      ['this is a test', [], 'this is a test'],
-      ['this is a test', [''], 'this is a test'],
-      ['', prefixes, ''],
-    ])('removePrefixBySpace(%s, %s, %s) should return %s', (input, prefixes, expected) => {
-      expect(stringUtils.removePrefix(input, prefixes)).toBe(expected);
-    });
-  })
-
-  describe('boldWord', () => {
+describe('TsxUtils', () => {
+  describe('boldWords', () => {
     it.each([
       ['Hello', 'Hello', '<b>Hello</b>'],
       ['Hello', 'Hello world', '<b>Hello</b> world'],
@@ -50,11 +24,12 @@ describe('StringUtils', () => {
       ['r', 'r r r', '<b>r</b> <b>r</b> <b>r</b>'],
       ['r', 'rrr rr r', '<b>rrr</b> <b>rr</b> <b>r</b>'],
     ])('boldWord(%s, %s) should return %s', (wordToDecorate, sentence, expected) => {
-      expect(stringUtils.boldWord(wordToDecorate, sentence)).toBe(expected);
+      const { container } = render(<>{tsxUtils.boldWords(wordToDecorate, sentence)}</>);
+      expect(container).toContainHTML(expected);
     });
   })
 
-  describe('decorateWord', () => {
+  describe('decorateWords', () => {
     it.each([
       ['Hello', 'Hello', '<b>Hello</b>'],
       ['To vex', 'What vex you the most', 'What <b>vex</b> you the most'],
@@ -64,11 +39,8 @@ describe('StringUtils', () => {
       ['the acumen', 'business acumen', 'business <b>acumen</b>'],
       ['contingency plan', '', ''],
     ])('decorateWord(%s, %s) should return %s', (wordToDecorate, sentence, expected) => {
-      expect(stringUtils.decorateWord(wordToDecorate, sentence)).toBe(expected);
+      const { container } = render(<>{tsxUtils.decorateWords(wordToDecorate, sentence)}</>);
+      expect(container).toContainHTML(expected);
     });
   })
-
 })
-
-// just to avoid TS error
-export {}
